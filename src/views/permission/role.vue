@@ -5,22 +5,22 @@
     </el-button>
 
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Role Key" width="220">
+      <el-table-column align="center" label="角色Id" width="220">
         <template slot-scope="scope">
-          {{ scope.row.key }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Role Name" width="220">
+      <el-table-column align="center" label="角色名称" width="220">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="Description">
+      <el-table-column align="header-center" label="角色描述">
         <template slot-scope="scope">
           {{ scope.row.description }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Operations">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope)">
             {{ $t('permission.editPermission') }}
@@ -64,7 +64,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
+import { getAllRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
 import i18n from '@/lang'
 
 const defaultRole = {
@@ -95,13 +95,12 @@ export default {
     }
   },
   created() {
-    // Mock: get all routes and roles list from server
     this.getRoutes()
     this.getRoles()
   },
   methods: {
     async getRoutes() {
-      const res = await getRoutes()
+      const res = await getAllRoutes()
       this.serviceRoutes = res.data
       const routes = this.generateRoutes(res.data)
       this.routes = this.i18n(routes)

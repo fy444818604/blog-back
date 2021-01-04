@@ -1,15 +1,30 @@
 import request from '@/utils/request'
 
-export function getRoutes() {
+export function getRoutes(id) {
   return request({
-    url: '/vue-element-admin/routes',
+    url: '/users/role/menuFind/'+id,
     method: 'get'
+  })
+}
+
+export function getAllRoutes() {
+  return request({
+    url: '/users/role/menus',
+    method: 'get'
+  })
+}
+
+export function addRoutes(data) {
+  return request({
+    url: '/users/role/menu',
+    method: 'post',
+    data
   })
 }
 
 export function getRoles() {
   return request({
-    url: '/vue-element-admin/roles',
+    url: '/users/role/roles',
     method: 'get'
   })
 }

@@ -1,16 +1,24 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import { getRoutes } from '@/api/role'
 
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
  * @param route
  */
+// function hasPermission(roles, route) {
+//   if (route.meta && route.meta.roles) {
+//     // if(typeof roles != Object){
+//     //   roles = [roles]
+//     // }
+//     return roles.some(role => route.meta.roles.includes(role))
+//   } else {
+//     return true
+//   }
+// }
+
 function hasPermission(roles, route) {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
-  } else {
-    return true
-  }
+  return roles.some(role => role == route.path)
 }
 
 /**
@@ -18,9 +26,21 @@ function hasPermission(roles, route) {
  * @param routes asyncRoutes
  * @param roles
  */
+// export function filterAsyncRoutes(routes, roles) {
+//   const res = []
+//   routes.forEach(route => {
+//     const tmp = { ...route }
+//     if (hasPermission(roles, tmp)) {
+//       if (tmp.children) {
+//         tmp.children = filterAsyncRoutes(tmp.children, roles)
+//       }
+//       res.push(tmp)
+//     }
+//   })
+//   return res
+// }
 export function filterAsyncRoutes(routes, roles) {
   const res = []
-
   routes.forEach(route => {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
@@ -30,9 +50,11 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
-
   return res
 }
+
+
+
 
 const state = {
   routes: [],
@@ -50,13 +72,25 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
-      if (roles.includes('admin')) {
+      console.log(roles);
+      if (roles[0].name = 'admin') {
         accessedRoutes = asyncRoutes || []
+        commit('SET_ROUTES', accessedRoutes)
+        resolve(accessedRoutes)
       } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        getRoutes(roles[0].id).then(res => {
+          let menu = [];
+          res.data.roleMenus.map(v => {
+            menu.push(v.path)
+          })
+          accessedRoutes = filterAsyncRoutes(asyncRoutes, menu)
+          commit('SET_ROUTES', accessedRoutes)
+          resolve(accessedRoutes)
+        })
+        // accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+
       }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+
     })
   }
 }

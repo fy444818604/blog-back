@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { getAllRoutes, addRoutes } from '@/api/role'
 
 Vue.use(Router)
 
@@ -11,6 +12,8 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+import labelRouter from './modules/label'
+import photosRouter from './modules/photos'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -147,7 +150,7 @@ export const asyncRoutes = [
         name: 'PagePermission',
         meta: {
           title: 'pagePermission',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['admin', 'editor'] // or you can only set roles in sub nav
         }
       },
       {
@@ -155,7 +158,8 @@ export const asyncRoutes = [
         component: () => import('@/views/permission/directive'),
         name: 'DirectivePermission',
         meta: {
-          title: 'directivePermission'
+          title: 'directivePermission',
+          roles: ['admin', 'editor']
           // if do not set roles, means: this page does not require permission
         }
       },
@@ -165,7 +169,7 @@ export const asyncRoutes = [
         name: 'RolePermission',
         meta: {
           title: 'rolePermission',
-          roles: ['admin']
+          roles: ['admin', 'editor']
         }
       }
     ]
@@ -179,7 +183,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/icons/index'),
         name: 'Icons',
-        meta: { title: 'icons', icon: 'icon', noCache: true }
+        meta: { title: 'icons', icon: 'icon', noCache: true, roles: ['admin'] }
       }
     ]
   },
@@ -189,6 +193,8 @@ export const asyncRoutes = [
   chartsRouter,
   nestedRouter,
   tableRouter,
+  labelRouter,
+  photosRouter,
 
   {
     path: '/example',
@@ -204,20 +210,20 @@ export const asyncRoutes = [
         path: 'create',
         component: () => import('@/views/example/create'),
         name: 'CreateArticle',
-        meta: { title: 'createArticle', icon: 'edit' }
+        meta: { title: 'createArticle', icon: 'edit', roles: ['editor'] }
       },
       {
-        path: 'edit/:id(\\d+)',
+        path: 'edit/:id',
         component: () => import('@/views/example/edit'),
         name: 'EditArticle',
-        meta: { title: 'editArticle', noCache: true, activeMenu: '/example/list' },
+        meta: { title: 'editArticle', noCache: true, activeMenu: '/example/list', roles: ['editor'] },
         hidden: true
       },
       {
         path: 'list',
         component: () => import('@/views/example/list'),
         name: 'ArticleList',
-        meta: { title: 'articleList', icon: 'list' }
+        meta: { title: 'articleList', icon: 'list', roles: ['editor'] }
       }
     ]
   },
@@ -230,7 +236,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/tab/index'),
         name: 'Tab',
-        meta: { title: 'tab', icon: 'tab' }
+        meta: { title: 'tab', icon: 'tab', roles: ['admin'] }
       }
     ]
   },
@@ -268,7 +274,7 @@ export const asyncRoutes = [
         path: 'log',
         component: () => import('@/views/error-log/index'),
         name: 'ErrorLog',
-        meta: { title: 'errorLog', icon: 'bug' }
+        meta: { title: 'errorLog', icon: 'bug', roles: ['admin'] }
       }
     ]
   },
@@ -280,7 +286,8 @@ export const asyncRoutes = [
     name: 'Excel',
     meta: {
       title: 'excel',
-      icon: 'excel'
+      icon: 'excel',
+      roles: ['admin']
     },
     children: [
       {
@@ -316,7 +323,7 @@ export const asyncRoutes = [
     redirect: '/zip/download',
     alwaysShow: true,
     name: 'Zip',
-    meta: { title: 'zip', icon: 'zip' },
+    meta: { title: 'zip', icon: 'zip', roles: ['admin'] },
     children: [
       {
         path: 'download',
@@ -336,7 +343,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/pdf/index'),
         name: 'PDF',
-        meta: { title: 'pdf', icon: 'pdf' }
+        meta: { title: 'pdf', icon: 'pdf', roles: ['admin'] }
       }
     ]
   },
@@ -354,7 +361,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/theme/index'),
         name: 'Theme',
-        meta: { title: 'theme', icon: 'theme' }
+        meta: { title: 'theme', icon: 'theme', roles: ['admin'] }
       }
     ]
   },
@@ -367,38 +374,61 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/clipboard/index'),
         name: 'ClipboardDemo',
-        meta: { title: 'clipboardDemo', icon: 'clipboard' }
+        meta: { title: 'clipboardDemo', icon: 'clipboard', roles: ['admin'] }
       }
     ]
   },
 
-  // {
-  //   path: '/i18n',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/i18n-demo/index'),
-  //       name: 'I18n',
-  //       meta: { title: 'i18n', icon: 'international' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/i18n',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/i18n-demo/index'),
+        name: 'I18n',
+        meta: { title: 'i18n', icon: 'international', roles: ['admin'] }
+      }
+    ]
+  },
 
-  // {
-  //   path: 'external-link',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'https://github.com/PanJiaChen/vue-element-admin',
-  //       meta: { title: 'externalLink', icon: 'link' }
-  //     }
-  //   ]
-  // },
+  {
+    path: 'external-link',
+    component: Layout,
+    children: [
+      {
+        path: 'https://github.com/PanJiaChen/vue-element-admin',
+        meta: { title: 'externalLink', icon: 'link', roles: ['admin'] }
+      }
+    ]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
+
+// todo
+getAllRoutes().then(res => {
+  let menu = getList(asyncRoutes)
+  if(res.data.length != menu.length){
+    let menus = []
+    for(let i = 0; i<menu.length;i++){
+      menus = [...menus,{name:menu[i].name || '',path:menu[i].path}]
+    }
+    console.log(menus);
+    addRoutes(menus)
+  }
+})
+let array = []
+function getList(val) {
+  val.map(v => {
+    array = [...array,v]
+    if(v.children && v.children.length != 0){
+      getList(v.children)
+    }
+  })
+  return array
+}
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

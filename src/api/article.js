@@ -10,9 +10,8 @@ export function fetchList(query) {
 
 export function fetchArticle(id) {
   return request({
-    url: '/vue-element-admin/article/detail',
+    url: 'note/noteSearchById/'+id,
     method: 'get',
-    params: { id }
   })
 }
 
@@ -40,9 +39,9 @@ export function delArticle(id) {
   })
 }
 
-export function updateArticle(data) {
+export function updateArticle(id,data) {
   return request({
-    url: '/vue-element-admin/article/update',
+    url: '/note/noteUpdate/'+id,
     method: 'post',
     data
   })

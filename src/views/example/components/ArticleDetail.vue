@@ -28,7 +28,14 @@
               <el-row>
                 <el-col :span="8">
                   <el-form-item label-width="60px" label="标签:" prop="labelId" class="postInfo-container-item">
-                    <el-select v-model="postForm.labelId" :remote-method="getRemoteUserList" filterable default-first-option remote placeholder="Search user">
+                    <el-select
+                      v-model="postForm.labelId"
+                      :remote-method="getRemoteUserList"
+                      filterable
+                      default-first-option
+                      remote
+                      placeholder="标签搜索"
+                    >
                       <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item.label" :value="item.value" />
                     </el-select>
                   </el-form-item>
@@ -80,11 +87,24 @@ import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { validURL } from '@/utils/validate'
-import { fetchArticle, fetchLabel, createArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
+import {
+  validURL
+} from '@/utils/validate'
+import {
+  fetchArticle,
+  fetchLabel,
+  createArticle,
+  updateArticle
+} from '@/api/article'
+import {
+  searchUser
+} from '@/api/remote-search'
 import Warning from './Warning'
-import { CommentDropdown, PlatformDropdown, SourceUrlDropdown } from './Dropdown'
+import {
+  CommentDropdown,
+  PlatformDropdown,
+  SourceUrlDropdown
+} from './Dropdown'
 
 const defaultForm = {
   status: 'draft',
@@ -103,7 +123,16 @@ const defaultForm = {
 
 export default {
   name: 'ArticleDetail',
-  components: { Tinymce, MDinput, Upload, Sticky, Warning, CommentDropdown, PlatformDropdown, SourceUrlDropdown },
+  components: {
+    Tinymce,
+    MDinput,
+    Upload,
+    Sticky,
+    Warning,
+    CommentDropdown,
+    PlatformDropdown,
+    SourceUrlDropdown
+  },
   props: {
     isEdit: {
       type: Boolean,
@@ -142,11 +171,22 @@ export default {
       loading: false,
       userListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
-        title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }],
-        labelId: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
+        image_uri: [{
+          validator: validateRequire
+        }],
+        title: [{
+          validator: validateRequire
+        }],
+        content: [{
+          validator: validateRequire
+        }],
+        labelId: [{
+          validator: validateRequire
+        }],
+        source_uri: [{
+          validator: validateSourceUri,
+          trigger: 'blur'
+        }]
       },
       tempRoute: {}
     }
@@ -185,24 +225,33 @@ export default {
   methods: {
     fetchData(id) {
       fetchArticle(id).then(response => {
-        this.postForm = response.data
+        console.log(response)
+        this.userListOptions = [{ value: response.data.label.id, label: response.data.label.name }]
+        const form = Object.assign(response.data, {
+          status: 'draft',
+          labelId: response.data.label.id,
+          image_uri: response.data.photos
+        })
+        this.postForm = form
 
         // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
+        // this.postForm.title += `   Article Id:${this.postForm.id}`
+        // this.postForm.content_short += `   Article Id:${this.postForm.id}`
 
         // set tagsview title
         this.setTagsViewTitle()
 
         // set page title
-        this.setPageTitle()
+        // this.setPageTitle()
       }).catch(err => {
         console.log(err)
       })
     },
     setTagsViewTitle() {
       const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
+      const route = Object.assign({}, this.tempRoute, {
+        title: `${title}-${this.postForm.id}`
+      })
       this.$store.dispatch('tagsView/updateVisitedView', route)
     },
     setPageTitle() {
@@ -214,20 +263,36 @@ export default {
       this.$refs.postForm.validate(valid => {
         console.log(valid)
         if (valid) {
-          Object.assign(this.postForm, { photos: this.postForm.image_uri })
-          createArticle(this.postForm).then(res => {
-            if (res.statusCode === 200) {
-              this.loading = true
-              this.$notify({
-                title: '成功',
-                message: res.msg,
-                type: 'success',
-                duration: 2000
-              })
-              this.postForm.status = 'published'
-              this.loading = false
-            }
+          Object.assign(this.postForm, {
+            photos: this.postForm.image_uri
           })
+          if (this.isEdit) {
+            updateArticle(this.postForm.id, this.postForm).then(res => {
+              if (res.statusCode === 200) {
+                this.$notify({
+                  title: '成功',
+                  message: res.msg,
+                  type: 'success',
+                  duration: 2000
+                })
+                this.$router.push({ path: '/example/list' })
+              }
+            })
+          } else {
+            createArticle(this.postForm).then(res => {
+              if (res.statusCode === 200) {
+                this.loading = true
+                this.$notify({
+                  title: '成功',
+                  message: res.msg,
+                  type: 'success',
+                  duration: 2000
+                })
+                this.postForm.status = 'published'
+                this.loading = false
+              }
+            })
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -254,7 +319,10 @@ export default {
       fetchLabel().then(response => {
         console.log(response.data)
         this.userListOptions = response.data.map(v => {
-          return { value: v.id, label: v.name }
+          return {
+            value: v.id,
+            label: v.name
+          }
         })
         // if (!response.data.items) return
         // this.userListOptions = response.data.items.map(v => v.name)
@@ -265,40 +333,40 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
+  @import "~@/styles/mixin.scss";
 
-.createPost-container {
-  position: relative;
+  .createPost-container {
+    position: relative;
 
-  .createPost-main-container {
-    padding: 40px 45px 20px 50px;
+    .createPost-main-container {
+      padding: 40px 45px 20px 50px;
 
-    .postInfo-container {
-      position: relative;
-      @include clearfix;
-      margin-bottom: 10px;
+      .postInfo-container {
+        position: relative;
+        @include clearfix;
+        margin-bottom: 10px;
 
-      .postInfo-container-item {
-        float: left;
+        .postInfo-container-item {
+          float: left;
+        }
       }
+    }
+
+    .word-counter {
+      width: 40px;
+      position: absolute;
+      right: 10px;
+      top: 0px;
     }
   }
 
-  .word-counter {
-    width: 40px;
-    position: absolute;
-    right: 10px;
-    top: 0px;
+  .article-textarea ::v-deep {
+    textarea {
+      padding-right: 40px;
+      resize: none;
+      border: none;
+      border-radius: 0px;
+      border-bottom: 1px solid #bfcbd9;
+    }
   }
-}
-
-.article-textarea ::v-deep {
-  textarea {
-    padding-right: 40px;
-    resize: none;
-    border: none;
-    border-radius: 0px;
-    border-bottom: 1px solid #bfcbd9;
-  }
-}
 </style>
