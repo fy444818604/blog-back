@@ -31,7 +31,7 @@ export function getRoles() {
 
 export function addRole(data) {
   return request({
-    url: '/vue-element-admin/role',
+    url: '/users/role/create',
     method: 'post',
     data
   })

@@ -6,7 +6,7 @@ const labelRouter = {
   redirect: '/label/list',
   name: 'label',
   meta: {
-    title: '标签',
+    title: 'label',
     icon: 'table'
   },
   children: [
@@ -14,20 +14,20 @@ const labelRouter = {
       path: 'create',
       component: () => import('@/views/label/create'),
       name: 'CreateLabel',
-      meta: { title: '创建标签', icon: 'edit', roles: ['editor'] }
+      meta: { title: 'CreateLabel', icon: 'edit', roles: ['editor'] }
     },
     {
       path: 'edit/:id',
       component: () => import('@/views/label/edit'),
       name: 'EditArticle',
-      meta: { title: '编辑标签', noCache: true, activeMenu: '/label/list', roles: ['editor'] },
+      meta: { title: 'EditArticle', noCache: true, activeMenu: '/label/list', roles: ['editor'] },
       hidden: true
     },
     {
       path: 'list',
       component: () => import('@/views/label/list'),
       name: 'LabelList',
-      meta: { title: '标签列表', icon: 'list', roles: ['editor'] }
+      meta: { title: 'LabelList', icon: 'list', roles: ['editor'] }
     }
   ]
 }

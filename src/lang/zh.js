@@ -28,6 +28,7 @@ export default {
     lineChart: '折线图',
     mixChart: '混合图表',
     example: '笔记',
+    label: '标签',
     nested: '路由嵌套',
     menu1: '菜单1',
     'menu1-1': '菜单 1-1',
@@ -62,7 +63,14 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
     externalLink: '外链',
-    profile: '个人中心'
+    profile: '个人中心',
+    CreateLabel: '创建标签',
+    LabelList: '标签列表',
+    EditArticle: '编辑标签',
+    photos:'相册',
+    Createphotos:'创建相册',
+    EditArticle: '编辑相册',
+    photosList: '相册列表'
   },
   navbar: {
     dashboard: '首页',

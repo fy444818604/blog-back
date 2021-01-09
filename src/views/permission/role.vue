@@ -22,10 +22,10 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" size="small" @click="handleEdit(scope)">
+          <el-button type="primary" size="small" :disabled="scope.row.id == '123'" @click="handleEdit(scope)">
             {{ $t('permission.editPermission') }}
           </el-button>
-          <el-button type="danger" size="small" @click="handleDelete(scope)">
+          <el-button type="danger" size="small" :disabled="scope.row.id == '123'" @click="handleDelete(scope)">
             {{ $t('permission.delete') }}
           </el-button>
         </template>
@@ -34,19 +34,19 @@
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
       <el-form :model="role" label-width="80px" label-position="left">
-        <el-form-item label="Name">
-          <el-input v-model="role.name" placeholder="Role Name" />
+        <el-form-item label="名称">
+          <el-input v-model="role.name" placeholder="角色名称" />
         </el-form-item>
-        <el-form-item label="Desc">
+        <el-form-item label="描述">
           <el-input
             v-model="role.description"
             :autosize="{ minRows: 2, maxRows: 4}"
             type="textarea"
-            placeholder="Role Description"
+            placeholder="角色描述"
           />
         </el-form-item>
-        <el-form-item label="Menus">
-          <el-tree ref="tree" :check-strictly="checkStrictly" :data="routesData" :props="defaultProps" show-checkbox node-key="path" class="permission-tree" />
+        <el-form-item label="菜单">
+          <el-tree ref="tree" :check-strictly="checkStrictly" :data="routesData" :props="defaultProps" show-checkbox node-key="id" class="permission-tree" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -64,14 +64,15 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getAllRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
+import { getAllRoutes, getRoles, addRole, deleteRole, updateRole, getRoutes } from '@/api/role'
+import { asyncRoutes } from '@/router/index'
 import i18n from '@/lang'
 
 const defaultRole = {
-  key: '',
+  id: '',
   name: '',
   description: '',
-  routes: []
+  roleMenus: []
 }
 
 export default {
@@ -86,7 +87,9 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'title'
-      }
+      },
+      distalRoute: [],
+      menu: []
     }
   },
   computed: {
@@ -99,10 +102,32 @@ export default {
     this.getRoles()
   },
   methods: {
+    getIds(array) {
+      const data = []
+      array.map(v => {
+        data.push(v.id)
+      })
+      return data
+    },
+    traverse(array) {
+      array.map(v => {
+        var param = this.distalRoute.filter(v1 => {
+          return v1.name == v.name || v1.path == v.path
+        })
+        Object.assign(v, { id: param[0].id })
+        if (v.children && v.children.length != 0) {
+          this.traverse(v.children)
+        }
+      })
+      return array
+    },
     async getRoutes() {
       const res = await getAllRoutes()
+      this.distalRoute = res.data
+      this.menu = this.traverse(deepClone(asyncRoutes))
       this.serviceRoutes = res.data
-      const routes = this.generateRoutes(res.data)
+      const routes = this.generateRoutes(this.menu)
+      // const routes = this.generateRoutes(res.data)
       this.routes = this.i18n(routes)
     },
     async getRoles() {
@@ -135,8 +160,9 @@ export default {
 
         const data = {
           path: path.resolve(basePath, route.path),
-          title: route.meta && route.meta.title
-
+          title: route.meta && route.meta.title,
+          id: route.id,
+          name: route.name || ''
         }
 
         // recursive child routes
@@ -174,8 +200,8 @@ export default {
       this.checkStrictly = true
       this.role = deepClone(scope.row)
       this.$nextTick(() => {
-        const routes = this.generateRoutes(this.role.routes)
-        this.$refs.tree.setCheckedNodes(this.generateArr(routes))
+        // const routes = this.generateRoutes(this.traverse(deepClone(asyncRoutes)))
+        this.$refs.tree.setCheckedKeys(this.getIds(this.role.roleMenus))
         // set checked state of a node not affects its father and child nodes
         this.checkStrictly = false
       })
@@ -216,8 +242,17 @@ export default {
     async confirmRole() {
       const isEdit = this.dialogType === 'edit'
 
-      const checkedKeys = this.$refs.tree.getCheckedKeys()
-      this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
+      const checkedKeys = this.$refs.tree.getCheckedNodes()
+      const routeData = []
+      checkedKeys.map(v => {
+        routeData.push({
+          id: v.id,
+          name: v.name,
+          path: v.path
+        })
+      })
+      // this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
+      this.role.roleMenus = routeData
 
       if (isEdit) {
         await updateRole(this.role.key, this.role)
@@ -228,11 +263,12 @@ export default {
           }
         }
       } else {
-        const { data } = await addRole(this.role)
-        this.role.key = data.key
-        this.rolesList.push(this.role)
+        console.log(this.role)
+        // const { data } = await addRole(this.role)
+        // this.role.key = data.key
+        // this.rolesList.push(this.role)
       }
-
+      return
       const { description, key, name } = this.role
       this.dialogVisible = false
       this.$notify({
