@@ -5,7 +5,7 @@
     </el-button>
 
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="角色Id" width="220">
+      <el-table-column align="center" label="角色Id" width="400">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
@@ -112,7 +112,7 @@ export default {
     traverse(array) {
       array.map(v => {
         var param = this.distalRoute.filter(v1 => {
-          return v1.name == v.name || v1.path == v.path
+          return v1.name == v.name
         })
         Object.assign(v, { id: param[0].id })
         if (v.children && v.children.length != 0) {
@@ -207,9 +207,9 @@ export default {
       })
     },
     handleDelete({ $index, row }) {
-      this.$confirm('Confirm to remove the role?', 'Warning', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
+      this.$confirm('确定删除这个角色?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async() => {
@@ -253,34 +253,33 @@ export default {
       })
       // this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
       this.role.roleMenus = routeData
-
-      if (isEdit) {
-        await updateRole(this.role.key, this.role)
-        for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].key === this.role.key) {
-            this.rolesList.splice(index, 1, Object.assign({}, this.role))
-            break
-          }
-        }
-      } else {
-        console.log(this.role)
-        // const { data } = await addRole(this.role)
-        // this.role.key = data.key
-        // this.rolesList.push(this.role)
-      }
-      return
-      const { description, key, name } = this.role
+      const { data } = await addRole(this.role)
+      this.getRoles()
+      // if (isEdit) {
+      // console.log(this.role)
+      // await updateRole(this.role.key, this.role)
+      // for (let index = 0; index < this.rolesList.length; index++) {
+      //   if (this.rolesList[index].key === this.role.key) {
+      //     this.rolesList.splice(index, 1, Object.assign({}, this.role))
+      //     break
+      //   }
+      // }
+      // } else {
+      // const { data } = await addRole(this.role)
+      // this.role.key = data.key
+      // this.rolesList.push(this.role)
+      // }
+      // const { description, name } = this.role
       this.dialogVisible = false
-      this.$notify({
-        title: 'Success',
-        dangerouslyUseHTMLString: true,
-        message: `
-            <div>Role Key: ${key}</div>
-            <div>Role Name: ${name}</div>
-            <div>Description: ${description}</div>
-          `,
-        type: 'success'
-      })
+      // this.$notify({
+      //   title: 'Success',
+      //   dangerouslyUseHTMLString: true,
+      //   message: `
+      //       <div>Role Name: ${name}</div>
+      //       <div>Description: ${description}</div>
+      //     `,
+      //   type: 'success'
+      // })
     },
     // reference: src/view/layout/components/Sidebar/SidebarItem.vue
     onlyOneShowingChild(children = [], parent) {

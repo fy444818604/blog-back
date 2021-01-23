@@ -124,7 +124,9 @@ export const constantRoutes = [
         meta: { title: 'profile', icon: 'user', noCache: true }
       }
     ]
-  }
+  },
+  // 404 page must be placed at the end !!!
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 /**
@@ -171,6 +173,14 @@ export const asyncRoutes = [
           title: 'rolePermission',
           roles: ['admin', 'editor']
         }
+      },
+      {
+        path: 'account',
+        component: () => import('@/views/permission/account'),
+        name: 'account',
+        meta: {
+          title: 'account'
+        }
       }
     ]
   },
@@ -178,6 +188,7 @@ export const asyncRoutes = [
   {
     path: '/icon',
     component: Layout,
+    name: 'Icon',
     children: [
       {
         path: 'index',
@@ -231,6 +242,7 @@ export const asyncRoutes = [
   {
     path: '/tab',
     component: Layout,
+    name: 'TabLayout',
     children: [
       {
         path: 'index',
@@ -269,6 +281,7 @@ export const asyncRoutes = [
   {
     path: '/error-log',
     component: Layout,
+    name: 'Error',
     children: [
       {
         path: 'log',
@@ -338,6 +351,7 @@ export const asyncRoutes = [
     path: '/pdf',
     component: Layout,
     redirect: '/pdf/index',
+    name: "Pdf",
     children: [
       {
         path: 'index',
@@ -350,12 +364,14 @@ export const asyncRoutes = [
   {
     path: '/pdf/download',
     component: () => import('@/views/pdf/download'),
-    hidden: true
+    hidden: true,
+    name: 'PdfDownload'
   },
 
   {
     path: '/theme',
     component: Layout,
+    name: 'ThemeLayout',
     children: [
       {
         path: 'index',
@@ -369,6 +385,7 @@ export const asyncRoutes = [
   {
     path: '/clipboard',
     component: Layout,
+    name: 'Clipboard',
     children: [
       {
         path: 'index',
@@ -382,6 +399,7 @@ export const asyncRoutes = [
   {
     path: '/i18n',
     component: Layout,
+    name: 'Language',
     children: [
       {
         path: 'index',
@@ -394,17 +412,17 @@ export const asyncRoutes = [
 
   {
     path: 'external-link',
+    name: 'External',
     component: Layout,
     children: [
       {
         path: 'https://github.com/PanJiaChen/vue-element-admin',
-        meta: { title: 'externalLink', icon: 'link', roles: ['admin'] }
+        meta: { title: 'externalLink', icon: 'link', roles: ['admin'] },
+        name: 'ExternalLink'
       }
     ]
   },
 
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 // todo
@@ -415,8 +433,12 @@ getAllRoutes().then(res => {
     for(let i = 0; i<menu.length;i++){
       menus = [...menus,{name:menu[i].name || '',path:menu[i].path}]
     }
-    console.log(menus);
-    addRoutes(menus)
+    let result = menus.filter(v => {
+      return !res.data.some(v1 => {
+        return v1.name == v.name
+      })
+    })
+    addRoutes(result)
   }
 })
 let array = []
