@@ -16,6 +16,14 @@ export function getInfo(token) {
   })
 }
 
+export function getAccountList(params) {
+  return request({
+    url:'/users/search',
+    method: 'get',
+    params: params
+  })
+}
+
 export function logout() {
   return request({
     url: '/vue-element-admin/user/logout',
