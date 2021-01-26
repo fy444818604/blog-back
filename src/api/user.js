@@ -24,6 +24,14 @@ export function getAccountList(params) {
   })
 }
 
+export function addUser(data) {
+  return request({
+    url: '/users/add',
+    method: 'post',
+    data
+  })
+}
+
 export function logout() {
   return request({
     url: '/vue-element-admin/user/logout',
