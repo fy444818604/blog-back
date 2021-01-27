@@ -7,7 +7,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  userId:''
 }
 
 const mutations = {
@@ -25,11 +26,14 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USERID: (state, userId) => {
+    state.userId = userId
   }
 }
 
 const actions = {
-  // user login
+  // 用户登录
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
@@ -44,12 +48,12 @@ const actions = {
     })
   },
 
-  // get user info
+  // 获取用户信息
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         response.data.roles = [response.data.roles]
-        console.log(response)
+        console.log("response",response)
         const { data } = response
 
         if (!data) {
@@ -57,7 +61,7 @@ const actions = {
         }
 
 
-        let { roles, name, avatar, introduction } = data
+        let { roles, fullName, avatar, introduction , userId} = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
@@ -65,9 +69,10 @@ const actions = {
         }
 
         commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
+        commit('SET_NAME', fullName)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
+        commit('SET_USERID', userId)
         resolve(data)
       }).catch(error => {
         reject(error)

@@ -11,7 +11,6 @@ import Layout from '@/layout'
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
-import nestedRouter from './modules/nested'
 import labelRouter from './modules/label'
 import photosRouter from './modules/photos'
 
@@ -98,19 +97,19 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'guide', icon: 'guide', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/guide',
+  //   component: Layout,
+  //   redirect: '/guide/index',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/guide/index'),
+  //       name: 'Guide',
+  //       meta: { title: 'guide', icon: 'guide', noCache: true }
+  //     }
+  //   ]
+  // },
   {
     path: '/profile',
     component: Layout,
@@ -185,24 +184,23 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/icon',
-    component: Layout,
-    name: 'Icon',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'icons', icon: 'icon', noCache: true, roles: ['admin'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/icon',
+  //   component: Layout,
+  //   name: 'Icon',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/icons/index'),
+  //       name: 'Icons',
+  //       meta: { title: 'icons', icon: 'icon', noCache: true, roles: ['admin'] }
+  //     }
+  //   ]
+  // },
 
   /** when your routing map is too long, you can split it into small modules **/
   componentsRouter,
   chartsRouter,
-  nestedRouter,
   tableRouter,
   labelRouter,
   photosRouter,
@@ -253,44 +251,44 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/error',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'ErrorPages',
-    meta: {
-      title: 'errorPages',
-      icon: '404'
-    },
-    children: [
-      {
-        path: '401',
-        component: () => import('@/views/error-page/401'),
-        name: 'Page401',
-        meta: { title: 'page401', noCache: true }
-      },
-      {
-        path: '404',
-        component: () => import('@/views/error-page/404'),
-        name: 'Page404',
-        meta: { title: 'page404', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/error',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   name: 'ErrorPages',
+  //   meta: {
+  //     title: 'errorPages',
+  //     icon: '404'
+  //   },
+  //   children: [
+  //     {
+  //       path: '401',
+  //       component: () => import('@/views/error-page/401'),
+  //       name: 'Page401',
+  //       meta: { title: 'page401', noCache: true }
+  //     },
+  //     {
+  //       path: '404',
+  //       component: () => import('@/views/error-page/404'),
+  //       name: 'Page404',
+  //       meta: { title: 'page404', noCache: true }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/error-log',
-    component: Layout,
-    name: 'Error',
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/error-log/index'),
-        name: 'ErrorLog',
-        meta: { title: 'errorLog', icon: 'bug', roles: ['admin'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/error-log',
+  //   component: Layout,
+  //   name: 'Error',
+  //   children: [
+  //     {
+  //       path: 'log',
+  //       component: () => import('@/views/error-log/index'),
+  //       name: 'ErrorLog',
+  //       meta: { title: 'errorLog', icon: 'bug', roles: ['admin'] }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/excel',
@@ -368,47 +366,47 @@ export const asyncRoutes = [
     name: 'PdfDownload'
   },
 
-  {
-    path: '/theme',
-    component: Layout,
-    name: 'ThemeLayout',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/theme/index'),
-        name: 'Theme',
-        meta: { title: 'theme', icon: 'theme', roles: ['admin'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/theme',
+  //   component: Layout,
+  //   name: 'ThemeLayout',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/theme/index'),
+  //       name: 'Theme',
+  //       meta: { title: 'theme', icon: 'theme', roles: ['admin'] }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/clipboard',
-    component: Layout,
-    name: 'Clipboard',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/clipboard/index'),
-        name: 'ClipboardDemo',
-        meta: { title: 'clipboardDemo', icon: 'clipboard', roles: ['admin'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/clipboard',
+  //   component: Layout,
+  //   name: 'Clipboard',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/clipboard/index'),
+  //       name: 'ClipboardDemo',
+  //       meta: { title: 'clipboardDemo', icon: 'clipboard', roles: ['admin'] }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/i18n',
-    component: Layout,
-    name: 'Language',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/i18n-demo/index'),
-        name: 'I18n',
-        meta: { title: 'i18n', icon: 'international', roles: ['admin'] }
-      }
-    ]
-  },
+  // {
+  //   path: '/i18n',
+  //   component: Layout,
+  //   name: 'Language',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/i18n-demo/index'),
+  //       name: 'I18n',
+  //       meta: { title: 'i18n', icon: 'international', roles: ['admin'] }
+  //     }
+  //   ]
+  // },
 
   {
     path: 'external-link',
@@ -416,13 +414,13 @@ export const asyncRoutes = [
     component: Layout,
     children: [
       {
-        path: 'https://github.com/PanJiaChen/vue-element-admin',
+        path: 'https://www.baidu.com/',
         meta: { title: 'externalLink', icon: 'link', roles: ['admin'] },
         name: 'ExternalLink'
       }
     ]
   },
-
+  { path: '*', redirect: '/404', hidden: true }
 ]
 
 // todo

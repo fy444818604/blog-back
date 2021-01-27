@@ -20,9 +20,17 @@ import RightPanel from '@/components/RightPanel'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
+import Driver from 'driver.js' 
+import 'driver.js/dist/driver.min.css' 
+import steps from './steps'
 
 export default {
   name: 'Layout',
+  data() {
+    return {
+      driver:null
+    }
+  },
   components: {
     AppMain,
     Navbar,
@@ -52,6 +60,19 @@ export default {
   methods: {
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
+    }
+  },
+  mounted() {
+    if(!window.localStorage.getItem('first')){
+      window.localStorage.setItem('first','1')
+      this.driver = new Driver({
+        doneBtnText: '完成',
+        closeBtnText: '关闭',
+        nextBtnText: '下一步',
+        prevBtnText: '上一步',
+      })
+      this.driver.defineSteps(steps)
+      this.driver.start()
     }
   }
 }
