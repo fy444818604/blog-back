@@ -1,11 +1,6 @@
 <template>
   <div class="app-container">
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
-      <!-- <el-table-column align="center" label="ID" width="80">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column> -->
 
       <el-table-column min-width="300px" label="标题">
         <template slot-scope="{row}">
@@ -44,20 +39,6 @@
           <span>{{ scope.row.label.num || 28 }}</span>
         </template>
       </el-table-column>
-
-      <!-- <el-table-column width="100px" label="Importance">
-        <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-        </template>
-      </el-table-column> -->
-
-      <!-- <el-table-column class-name="status-col" label="Status" width="110">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column> -->
 
       <el-table-column align="center" label="操作" width="240">
         <template slot-scope="scope">

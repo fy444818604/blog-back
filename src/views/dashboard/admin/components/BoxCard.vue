@@ -4,8 +4,8 @@
       <img src="https://wpimg.wallstcn.com/e7d23d71-cf19-4b90-a1cc-f56af8c0903d.png">
     </div>
     <div style="position:relative;">
-      <pan-thumb :image="avatar" class="panThumb" />
-      <mallki class-name="mallki-text" text="vue-element-admin" />
+      <pan-thumb :image="avatar || require('@/assets/123.jpg')" class="panThumb" />
+      <mallki class-name="mallki-text" text="标签文章" />
       <div style="padding-top:35px;" class="progress-item">
         <span>Vue</span>
         <el-progress :percentage="70" />

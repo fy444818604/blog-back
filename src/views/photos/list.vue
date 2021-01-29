@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
-    开发中。。。
-    <!-- <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
 
       <el-table-column min-width="180px" label="封面">
         <template slot-scope="{row}">
@@ -41,16 +40,16 @@
           </el-row>
         </template>
       </el-table-column>
-    </el-table> -->
+    </el-table>
 
-    <!-- <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.pageSize" @pagination="getList" /> -->
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.current" :limit.sync="listQuery.pageSize" @pagination="getList" />
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
 import { dateFormat } from '@/utils/index'
-import { fetchList } from '@/api/label.js'
+import { fetchList } from '@/api/photo'
 export default {
   name: 'LabelList',
   components: { Pagination },
@@ -75,25 +74,13 @@ export default {
     getList() {
       this.listLoading = true
       fetchList().then(response => {
-        this.list = response.data
+        console.log(response);
+        // this.list = response.data
         // this.list = response.data[0]
         // this.total = response.data[1]
         this.listLoading = false
       })
     }
-    // del(id) {
-    //   delArticle(id).then(res => {
-    //     if (res.statusCode === 200) {
-    //       this.getList()
-    //       this.$message({
-    //         message: res.msg,
-    //         type: 'success',
-    //         showClose: true,
-    //         duration: 1000
-    //       })
-    //     }
-    //   })
-    // }
   }
 }
 </script>
