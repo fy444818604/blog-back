@@ -7,3 +7,18 @@ export function fetchList(query) {
     params: query
   })
 }
+
+export function photosCreate(data) {
+  return request({
+    url: '/photos/add',
+    method: 'post',
+    data
+  })
+}
+
+export function photoSearch(query) {
+  return request({
+    url: '/photos/item/search/'+query,
+    method: 'get'
+  })
+}

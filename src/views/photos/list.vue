@@ -4,19 +4,28 @@
 
       <el-table-column min-width="180px" label="封面">
         <template slot-scope="{row}">
-          <span>{{ row.notes.length }}</span>
+          <el-image
+          style="width: 260px; height: 150px"
+          :src="row.cover"
+          :fit="cover"></el-image>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="标题">
+      <el-table-column min-width="180px" label="标题">
         <template slot-scope="{row}">
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="创建人">
+      <el-table-column min-width="180px" label="创建人">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.user.fullName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="180px" label="照片数量">
+        <template slot-scope="{row}">
+          <span>{{ row.photos.length }}</span>
         </template>
       </el-table-column>
 
@@ -29,7 +38,7 @@
       <el-table-column align="center" label="操作" width="240">
         <template slot-scope="scope">
           <el-row>
-            <router-link :to="'/label/edit/'+scope.row.id">
+            <router-link :to="'/photos/edit/'+scope.row.id">
               <el-button type="primary" size="small" icon="el-icon-edit">
                 编辑
               </el-button>
@@ -74,10 +83,8 @@ export default {
     getList() {
       this.listLoading = true
       fetchList().then(response => {
-        console.log(response);
-        // this.list = response.data
-        // this.list = response.data[0]
-        // this.total = response.data[1]
+        this.list = response.data[0]
+        this.total = response.data[1]
         this.listLoading = false
       })
     }

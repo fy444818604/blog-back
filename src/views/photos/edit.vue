@@ -1,8 +1,12 @@
 <template>
+  <photos-detail :is-edit="true" />
 </template>
 
 <script>
-</script>
+import photosDetail from './components/photosDetail'
 
-<style lang="scss" scoped="scoped">
-</style>
+export default {
+  name: 'EditPhotos',
+  components: { photosDetail }
+}
+</script>

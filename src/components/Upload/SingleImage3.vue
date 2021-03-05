@@ -1,6 +1,7 @@
 <template>
   <div class="upload-container">
     <el-upload
+      :limit="limit"
       :data="dataObj"
       :multiple="false"
       :show-file-list="false"
@@ -44,6 +45,10 @@ export default {
     value: {
       type: Array,
       default: []
+    },
+    limit: {
+      type: Number,
+      default: 4
     }
   },
   data() {
